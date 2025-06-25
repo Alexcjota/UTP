@@ -1,6 +1,27 @@
 import * as XLSX from 'xlsx';
 import { ExcelData, Student } from '../types';
 
+const parseFullName = (fullName: string): { nombre: string; apellido: string } => {
+  const parts = fullName.trim().split(/\s+/);
+  
+  if (parts.length === 1) {
+    return { nombre: parts[0], apellido: '' };
+  } else if (parts.length === 2) {
+    return { nombre: parts[0], apellido: parts[1] };
+  } else if (parts.length === 3) {
+    // Asumimos: Nombre Apellido1 Apellido2
+    return { nombre: parts[0], apellido: `${parts[1]} ${parts[2]}` };
+  } else if (parts.length >= 4) {
+    // Asumimos: Nombre1 Nombre2 Apellido1 Apellido2
+    const middleIndex = Math.floor(parts.length / 2);
+    const nombres = parts.slice(0, middleIndex).join(' ');
+    const apellidos = parts.slice(middleIndex).join(' ');
+    return { nombre: nombres, apellido: apellidos };
+  }
+  
+  return { nombre: fullName, apellido: '' };
+};
+
 export const processExcelFile = (file: File): Promise<{ students: Student[], duplicatesFound: number }> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -23,19 +44,42 @@ export const processExcelFile = (file: File): Promise<{ students: Student[], dup
         // Skip header row and process data
         for (let i = 1; i < jsonData.length; i++) {
           const row = jsonData[i];
-          if (!row || row.length < 4) continue; // Skip empty or incomplete rows (need at least 4 columns)
+          if (!row || row.length === 0) continue; // Skip empty rows
           
-          const primerNombre = String(row[0] || '').trim();
-          const segundoNombre = String(row[1] || '').trim();
-          const primerApellido = String(row[2] || '').trim();
-          const segundoApellido = String(row[3] || '').trim();
+          let nombre = '';
+          let apellido = '';
           
-          // At least first name and first surname are required
-          if (!primerNombre || !primerApellido) continue;
-          
-          // Combine names and surnames
-          const nombre = [primerNombre, segundoNombre].filter(n => n).join(' ');
-          const apellido = [primerApellido, segundoApellido].filter(a => a).join(' ');
+          // Detectar el formato del archivo
+          if (row.length >= 4) {
+            // Formato de 4 columnas: Primer Nombre, Segundo Nombre, Primer Apellido, Segundo Apellido
+            const primerNombre = String(row[0] || '').trim();
+            const segundoNombre = String(row[1] || '').trim();
+            const primerApellido = String(row[2] || '').trim();
+            const segundoApellido = String(row[3] || '').trim();
+            
+            if (!primerNombre || !primerApellido) continue;
+            
+            nombre = [primerNombre, segundoNombre].filter(n => n).join(' ');
+            apellido = [primerApellido, segundoApellido].filter(a => a).join(' ');
+          } else if (row.length >= 2) {
+            // Formato de 2 columnas: Nombres, Apellidos
+            nombre = String(row[0] || '').trim();
+            apellido = String(row[1] || '').trim();
+            
+            if (!nombre || !apellido) continue;
+          } else if (row.length === 1) {
+            // Formato de 1 columna: Nombre completo
+            const fullName = String(row[0] || '').trim();
+            if (!fullName) continue;
+            
+            const parsed = parseFullName(fullName);
+            nombre = parsed.nombre;
+            apellido = parsed.apellido;
+            
+            if (!nombre) continue;
+          } else {
+            continue; // Skip invalid rows
+          }
           
           // Create a normalized key for duplicate detection
           const normalizedKey = `${nombre.toLowerCase().replace(/\s+/g, ' ')}|${apellido.toLowerCase().replace(/\s+/g, ' ')}`;
@@ -46,26 +90,22 @@ export const processExcelFile = (file: File): Promise<{ students: Student[], dup
           }
           
           seenStudents.add(normalizedKey);
-          excelData.push({ nombre, apellido });
+          excelData.push({ 
+            nombre, 
+            apellido, 
+            ordenOriginal: i // Mantener el orden original del archivo
+          });
         }
         
-        // Sort by apellido (surname) first, then by nombre (name)
-        excelData.sort((a, b) => {
-          const apellidoComparison = a.apellido.localeCompare(b.apellido, 'es', { sensitivity: 'base' });
-          if (apellidoComparison !== 0) {
-            return apellidoComparison;
-          }
-          return a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
-        });
-        
-        // Convert to Student objects
+        // Convert to Student objects (manteniendo el orden original)
         const students: Student[] = excelData.map((data, index) => ({
           id: `excel_${Date.now()}_${index}`,
           nombre: data.nombre,
           apellido: data.apellido,
           presente: false,
           esManual: false,
-          fechaCreacion: new Date()
+          fechaCreacion: new Date(),
+          ordenOriginal: data.ordenOriginal
         }));
         
         resolve({ students, duplicatesFound });

@@ -7,6 +7,7 @@ export interface Student {
   presente: boolean;
   esManual: boolean; // true if added manually, false if from Excel
   fechaCreacion: Date;
+  ordenOriginal?: number; // Para mantener el orden original del archivo
 }
 
 export interface AttendanceList {
@@ -30,6 +31,7 @@ export interface AttendanceSummary {
 export interface ExcelData {
   nombre: string;
   apellido: string;
+  ordenOriginal: number;
 }
 
 export interface Notification {

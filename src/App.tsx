@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { BookOpen, Save, AlertCircle } from 'lucide-react';
+import { GraduationCap, Save, AlertCircle } from 'lucide-react';
 import { Student, AttendanceList, AttendanceSummary, Notification } from './types';
 import { saveAttendanceList, getAttendanceLists, deleteAttendanceList } from './utils/storageUtils';
 import ListManager from './components/ListManager';
@@ -248,24 +248,26 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
       <NotificationSystem
         notifications={notifications}
         removeNotification={removeNotification}
       />
 
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="bg-white shadow-lg border-b-4 border-orange-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <BookOpen className="w-8 h-8 text-blue-600 mr-3" />
+              <div className="bg-gradient-to-br from-blue-600 to-orange-500 p-3 rounded-xl mr-4">
+                <GraduationCap className="w-10 h-10 text-white" />
+              </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Sistema de Asistencia Escolar
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
+                  Sistema de Asistencia UTP
                 </h1>
-                <p className="text-sm text-gray-600">
-                  Gestión de asistencia para promotores escolares
+                <p className="text-sm text-gray-600 mt-1">
+                  Universidad Tecnológica de Pereira - Gestión de Asistencia Estudiantil
                 </p>
               </div>
             </div>
@@ -277,9 +279,9 @@ function App() {
                 </div>
                 <button
                   onClick={handleManualSave}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center font-medium"
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center font-medium shadow-lg"
                 >
-                  <Save className="w-4 h-4 mr-1" />
+                  <Save className="w-4 h-4 mr-2" />
                   Guardar Ahora
                 </button>
               </div>
@@ -327,23 +329,44 @@ function App() {
         )}
 
         {!currentList && (
-          <div className="text-center py-12">
-            <BookOpen className="w-24 h-24 text-gray-400 mx-auto mb-6" />
-            <h2 className="text-2xl font-bold text-gray-600 mb-4">
-              Bienvenido al Sistema de Asistencia Escolar
+          <div className="text-center py-16">
+            <div className="bg-gradient-to-br from-blue-600 to-orange-500 p-6 rounded-full w-32 h-32 mx-auto mb-8 flex items-center justify-center">
+              <GraduationCap className="w-16 h-16 text-white" />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">
+              Bienvenido al Sistema de Asistencia UTP
             </h2>
-            <p className="text-gray-500 mb-8 max-w-md mx-auto">
-              Crea una nueva lista de asistencia o selecciona una existente para comenzar a gestionar la asistencia de tus estudiantes.
+            <p className="text-gray-600 mb-8 max-w-2xl mx-auto text-lg">
+              Gestiona la asistencia de estudiantes de manera eficiente. Crea una nueva lista de asistencia 
+              o selecciona una existente para comenzar a registrar la presencia de tus estudiantes.
             </p>
+            <div className="bg-white rounded-xl p-6 max-w-md mx-auto shadow-lg border border-gray-200">
+              <h3 className="font-semibold text-gray-800 mb-3">Características principales:</h3>
+              <ul className="text-sm text-gray-600 space-y-2 text-left">
+                <li>• Carga masiva desde archivos Excel</li>
+                <li>• Registro manual de estudiantes</li>
+                <li>• Exportación a PDF y Excel</li>
+                <li>• Gestión múltiple de listas</li>
+                <li>• Guardado automático</li>
+              </ul>
+            </div>
           </div>
         )}
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center text-sm text-gray-600">
-            <p>Apoyos UTP</p>
+      <footer className="bg-white border-t border-gray-200 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <div className="flex items-center justify-center mb-4">
+              <div className="bg-gradient-to-br from-blue-600 to-orange-500 p-2 rounded-lg mr-3">
+                <GraduationCap className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-lg font-semibold text-gray-800">Universidad Tecnológica de Pereira</span>
+            </div>
+            <p className="text-sm text-gray-600">
+              Sistema de Asistencia Estudiantil - Desarrollado para optimizar el control de asistencia
+            </p>
           </div>
         </div>
       </footer>
