@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, UserCheck, UserX, FileSpreadsheet, UserPlus, Trash2, ArrowUpDown, RotateCcw } from 'lucide-react';
+import { Search, UserCheck, UserX, FileSpreadsheet, UserPlus, Trash2, ArrowUpDown, RotateCcw, Info } from 'lucide-react';
 import { Student } from '../types';
 
 interface StudentTableProps {
