@@ -267,7 +267,7 @@ function App() {
                   Sistema de Asistencia UTP
                 </h1>
                 <p className="text-sm text-gray-600 mt-1">
-                  Universidad Tecnológica de Pereira - Gestión de Asistencia Estudiantil
+                  Universidad Tecnológica del Perú - Gestión de Asistencia Estudiantil
                 </p>
               </div>
             </div>
@@ -362,10 +362,10 @@ function App() {
               <div className="bg-gradient-to-br from-blue-600 to-orange-500 p-2 rounded-lg mr-3">
                 <GraduationCap className="w-6 h-6 text-white" />
               </div>
-              <span className="text-lg font-semibold text-gray-800">Universidad Tecnológica de Pereira</span>
+              <span className="text-lg font-semibold text-gray-800">Apoyos UTP</span>
             </div>
             <p className="text-sm text-gray-600">
-              Sistema de Asistencia Estudiantil - Desarrollado para optimizar el control de asistencia
+              Universidad Tecnológica del Perú - Sistema de Asistencia Estudiantil
             </p>
           </div>
         </div>
